@@ -64,6 +64,7 @@ The AI utilizes a **TensorFlow Lite** model to analyze squat form. Key angles (h
 ## 📞 Contact
 For any inquiries, feel free to reach out:
 - 📧 Email: [Haydendouglas32@icloud.com]
+- 📧 Email: [rohans@vt.edu]
 
 ---
 
