@@ -197,12 +197,11 @@ def FormWatcher():
 
 @app.route('/callScript', methods=['POST'])
 def callScript():
-    
     workout = request.get_json().get('workout')
     if (workout == "squat"):
-        squatWorkout = True
+        squat = True
     else:
-        squatWorkout = False
+        squat = False
 
     form_score = form_detection()
 
