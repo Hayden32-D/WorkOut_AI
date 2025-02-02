@@ -11,7 +11,8 @@ import secrets
 
 interperter = tf.lite.Interpreter(model_path="3.tflite") #downloaded model
 interperter.allocate_tensors() 
-squat = False
+squat = True
+
 
 def form_detection():
     # access webcam and make detections
@@ -69,7 +70,8 @@ def form_detection():
             # Check the squat form
             form_score_temp, state = squat_checker.check_squat(knee_angle, hip_angle)
 
-            if form_score_temp is not None and form_score is not None and form_score >= form_score_temp:
+
+            if form_score_temp is not None and form_score is not None and form_score >= form_score_temp and abs(form_score - form_score_temp) < 35:
                 form_score = form_score_temp
 
             if form_score is not None:
@@ -198,11 +200,9 @@ def FormWatcher():
 @app.route('/callScript', methods=['POST'])
 def callScript():
     workout = request.get_json().get('workout')
-    if (workout == "squat"):
-        squat = True
-    else:
-        squat = False
+    squat = (workout == "squat")
 
+    #print(squat)
     form_score = form_detection()
 
     if form_score is None:
