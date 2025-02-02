@@ -27,6 +27,9 @@ Ensure you have the following installed:
 - Flask
 - OpenCV
 - TensorFlow Lite
+- Google-GenAI
+- Matplotlib
+- Numpy
 - Git
 
 ### Clone the Repository
