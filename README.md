@@ -5,14 +5,15 @@ VioletHacks - WorkOut AI is an AI-powered fitness assistant designed to generate
 
 ## 🚀 Features
 - 🔹 AI-generated workout plans based on user input
-- 🔹 Real-time squat form analysis using a TensorFlow Lite model
+- 🔹 Real-time squat form analysis using a TensorFlow Lite model, MoveNet Lighting Model
+- 🔹 Connects to Gemini API for a workout planner
 - 🔹 User-friendly interface for selecting muscle groups and workout intensity
 - 🔹 Automated process management to free up necessary ports
 - 🔹 Flask-based web application
 
 ## 🛠️ Tech Stack
 - **Backend:** Python, Flask
-- **AI/ML:** TensorFlow Lite, OpenAI API (Gemini)
+- **AI/ML:** TensorFlow Lite, Gemini API
 - **Computer Vision:** OpenCV
 - **Frontend:** HTML, CSS, JavaScript
 - **Deployment:** Local machine, Flask server
@@ -37,7 +38,7 @@ $ cd WorkOut_AI/VioletHacks
 ### Backend Setup
 ```bash
 $ pip install -r requirements.txt
-$ python main.py  # or flask run
+$ python -m flask --app run main (runs the code)
 ```
 
 ## 🎯 Usage
@@ -65,6 +66,7 @@ The AI utilizes a **TensorFlow Lite** model to analyze squat form. Key angles (h
 For any inquiries, feel free to reach out:
 - 📧 Email: [Haydendouglas32@icloud.com]
 - 📧 Email: [rohans@vt.edu]
+- 📧 Email: [kece05@vt.edu]
 
 ---
 
