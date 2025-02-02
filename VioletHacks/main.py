@@ -11,7 +11,7 @@ import secrets
 
 interperter = tf.lite.Interpreter(model_path="3.tflite") #downloaded model
 interperter.allocate_tensors() 
-squatWorkout = False
+squat = False
 
 def form_detection():
     # access webcam and make detections
@@ -26,7 +26,8 @@ def form_detection():
     cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
     squat_checker = SquatFormChecker()  # Create an instance of SquatFormChecker
-    form_score = 0  # Initialize form score
+    form_score = 100  # Initialize form score
+
 
 
     while cap.isOpened():
@@ -54,22 +55,25 @@ def form_detection():
         keypoints_with_scores = interperter.get_tensor(out_details[0]['index'])
 
 
+        if (squat):
+            # Extract relevant keypoints
+            left_hip = keypoints_with_scores[0][0][11]
+            left_knee = keypoints_with_scores[0][0][13]
+            left_ankle = keypoints_with_scores[0][0][15]
+            left_shoulder = keypoints_with_scores[0][0][5]
 
-        # Extract relevant keypoints
-        left_hip = keypoints_with_scores[0][0][11]
-        left_knee = keypoints_with_scores[0][0][13]
-        left_ankle = keypoints_with_scores[0][0][15]
-        left_shoulder = keypoints_with_scores[0][0][5]
+            # Calculate angles
+            knee_angle = get_knee_angle(left_hip, left_knee, left_ankle)
+            hip_angle = get_hip_angle(left_shoulder, left_hip, left_knee)
 
-        # Calculate angles
-        knee_angle = get_knee_angle(left_hip, left_knee, left_ankle)
-        hip_angle = get_hip_angle(left_shoulder, left_hip, left_knee)
+            # Check the squat form
+            form_score_temp, state = squat_checker.check_squat(knee_angle, hip_angle)
 
-        # Check the squat form
-        form_score, state = squat_checker.check_squat(knee_angle, hip_angle)
+            if form_score_temp is not None and form_score is not None and form_score >= form_score_temp:
+                form_score = form_score_temp
 
-        if form_score is not None:
-            print(f"Form Score: {form_score}, State: {state}, Knee Angle {knee_angle}, Hip angle {hip_angle}")
+            if form_score is not None:
+                print(f"Form Score: {form_score}, Form Score Temp: {form_score_temp}, State: {state}, Knee Angle {knee_angle}, Hip angle {hip_angle}")
 
         # Rendering
         draw_connections(flipped_frame, keypoints_with_scores, EDGES, 0.4)
@@ -193,20 +197,20 @@ def FormWatcher():
 
 @app.route('/callScript', methods=['POST'])
 def callScript():
+    
     workout = request.get_json().get('workout')
     if (workout == "squat"):
         squatWorkout = True
     else:
         squatWorkout = False
 
-    print(squatWorkout)
-    #form_score = form_detection()
+    form_score = form_detection()
 
-    #if form_score is None:
-   #     form_score = "No score detected. Please try again."
+    if form_score is None:
+        form_score = "No score detected. Please try again."
 
     # Store score in session
-    #session['form_score'] = form_score
+    session['form_score'] = form_score
 
     # Redirect to display the score
     return redirect(url_for('display_score'))
@@ -219,8 +223,6 @@ def display_score():
         form_score = "No score available. Please try again."
 
     return render_template("WorkoutTracker2.html", score=form_score)
-
-
 @app.route("/")
 def main():
     return render_template("mainPage.html")
