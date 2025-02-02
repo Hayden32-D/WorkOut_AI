@@ -41,15 +41,19 @@ class SquatFormChecker:
             self.state = "LOWERING"
         elif 90 <= knee_angle <= 110 and 90 <= hip_angle <= 110:
             self.state = "SQUAT_POSITION"
-        elif self.state == "SQUAT_POSITION" and knee_angle > 120 and hip_angle > 120:
+        elif self.state == "SQUAT_POSITION" and knee_angle > 140 and hip_angle > 120:
             self.state = "COMING_UP"
 
         # Only deduct points in 'SQUAT_POSITION' state
         if self.state == "SQUAT_POSITION":
-            if knee_angle < 90 or knee_angle > 110:
-                score -= 15  # Deduct 15 points for incorrect knee angle
-            if hip_angle < 90 or hip_angle > 110:
-                score -= 15  # Deduct 15 points for incorrect hip angle
+            if knee_angle < 70 and knee_angle > 50:
+                score -= 70 - knee_angle 
+            if knee_angle > 140 and knee_angle < 180:
+                score -= knee_angle - 140
+            if hip_angle < 60:
+                score -= 60 - hip_angle 
+            if hip_angle > 150 and hip_angle < 170:
+                score -= hip_angle - 150  
             
-
+        score = int(score)
         return score, self.state
