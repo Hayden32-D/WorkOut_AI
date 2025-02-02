@@ -8,25 +8,65 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-            background-color: #e4bbab;
-            padding-bottom: 60px;
+            background-color: #F2D3C1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
         }
 
         h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        select {
+            width: 250px;
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #aaa;
+            background-color: white;
+            text-align: center;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #D97B58;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #B76248;
+        }
+
+        .score-container {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
             text-align: center;
         }
 
         .bottom-banner {
             width: 100%;
-            background-color: #333;
+            background-color: #515050;
             color: white;
             text-align: center;
             padding: 15px 0;
             font-size: 18px;
+            position: fixed;    
             font-weight: bold;
-            position: fixed;
             bottom: 0;
             left: 0;
         }
@@ -35,40 +75,22 @@
             color: white;
             text-decoration: none;
         }
-
-        #recordButton {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #db8d6c;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #recordButton:hover {
-            background-color: #b3755b;
-        }
-
-        #formScore {
-            text-align: center;
-            font-size: 18px;
-            margin-top: 20px;
-            color: #333;
-        }
     </style>
 </head>
 
 <body>
     <h1>Workout Form Adviser</h1>
 
+    <br>
+    <h2>Select Workout</h2>
+    <select name="workout" id="workout">
+        <option value="squat">Squat</option>
+        <option value="biceps">Biceps</option>
+    </select>
+    <br>
     <button id="recordButton">Start Recording</button>
 
-    <!-- Display the form score if available -->
     <div class="score-container">
-        <!-- Display the score if available -->
         {% if score %}
             Your Form Score: {{ score }}
         {% else %}
@@ -82,16 +104,23 @@
 
     <script>
         const recordButton = document.getElementById('recordButton');
-    
+        const selected = document.getElementById('workout');
+
         recordButton.addEventListener('click', () => {
-            // When clicked, the script runs and redirects to WorkoutTracker2.html
+            event.preventDefault();
+            const selectedValue = selected.value;
             fetch("/callScript", {
-                method: 'POST'
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ workout: selectedValue })
             })
             .then(response => {
                 if (response.redirected) {
-                    window.location.href = response.url;  // Redirect to WorkoutTracker2.html
+                    window.location.href = response.url;  
                 }
+                return response.json();
             })
             .catch(error => {
                 console.error('Error:', error);
