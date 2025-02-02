@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Form Adviser</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #e4bbab;
+            padding-bottom: 60px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .bottom-banner {
+            width: 100%;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 18px;
+            font-weight: bold;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
+        .bottom-banner a {
+            color: white;
+            text-decoration: none;
+        }
+        #webcam,
+        #recordedVideo {
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            background-color: #bdbdbd;
+        }
+
+        #recordButton {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #db8d6c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #recordButton:hover {
+            background-color: #b3755b;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Workout Form Adviser</h1>
+    <video id="webcam" width="640" height="480" autoplay></video>
+    <button id="recordButton">Start Recording</button>
+    <br><br>
+    <video id="recordedVideo" width="640" height="480" controls></video>
+
+    <div class="bottom-banner">
+        <a href="/"> Back to Main Page</a>
+    </div>
+
+    <script>
+        const videoElement = document.getElementById('webcam');
+        const recordedVideo = document.getElementById('recordedVideo');
+        const recordButton = document.getElementById('recordButton');
+        let mediaRecorder;
+        let recordedChunks = [];
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                videoElement.srcObject = stream;
+
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = event => {
+                    recordedChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const recordedBlob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const videoURL = URL.createObjectURL(recordedBlob);
+
+                    recordedVideo.src = videoURL;
+                    recordedVideo.load(); 
+                    fetch("/callScript", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ message: videoURL })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to call the script');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                    recordedChunks = []; 
+                };
+            })
+            .catch(err => {
+                console.error("Error accessing the webcam:", err);
+            });
+
+        recordButton.addEventListener('click', () => {
+            if (mediaRecorder.state === 'inactive') {
+                mediaRecorder.start();
+                recordButton.textContent = 'Stop Recording';
+            } else {
+                mediaRecorder.stop();
+                recordButton.textContent = 'Start Recording';
+            }
+        });
+    </script>
+</body>
+
+</html>
