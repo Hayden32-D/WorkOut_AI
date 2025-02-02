@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Webpage</title>
+    <style>
+        /* Ensure full height of viewport and center everything */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e4bbab;
+            display: flex;
+            justify-content: center;
+            align-items: center;            
+        }
+
+        .content-wrapper {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px; /* Max width for content */
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #34495e;
+            font-size: 18px;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .button-container {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .action-button {
+            padding: 15px;
+            font-size: 18px;
+            color: white;
+            background-color: #db8d6c;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 220px;
+        }
+
+        .action-button:hover {
+            background-color: #b3755b;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="content-wrapper">
+        <h1>Welcome to the Workout Webpage</h1>
+        <p>Welcome to our Hack-A-Thon project! We’ve created two amazing AI-powered tools to help you with your workout journey:</p>
+        <p><strong>Workout Planner</strong>: Uses Gemini's API to create a personalized workout plan for you.</p>
+        <p><strong>Form Watcher</strong>: Uses TensorFlow's MoveNet Lightning to analyze and improve your form during exercises.</p>
+
+        <div class="button-container">
+            <button class="action-button" onclick="window.location.href='/FormWatcher'">Go to FormWatcher</button>
+            <button class="action-button" onclick="window.location.href='/WorkoutSuggestor'">Go to WorkoutSuggestor</button>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Selector</title>
+    <style>
+        /* Reset some default browser styles */
+        /* Reset default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e4bbab;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh; /* Allow content to grow */
+            color: #333;
+            padding-bottom: 60px;
+            overflow: auto; /* Enable scrolling */
+        }
+
+        h2, h3 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            background-color: #f9f9f9;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background-color: #db8d6c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #b3755b;
+        }
+
+        /* Sticky Bottom Banner (Allows Scrolling) */
+        .bottom-banner {
+            width: 100%;
+            background-color: #515050;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 18px;
+            font-weight: bold;
+            position: sticky;
+            bottom: 0;
+            left: 0;
+        }
+
+        .bottom-banner a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Make Result Box Scrollable */
+        #result {
+            margin-top: 20px;
+            width: 35%;
+            height: 200px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            resize: none;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto; /* Enable scrolling inside result box */
+        }
+
+    </style>
+</head>
+<body></body>
+    <form id="workoutForm">
+        <h2>Select Muscle Groups</h2>
+        <br><br>
+        <label><input type="checkbox" name="muscle" value="chest"> Chest</label><br>
+        <label><input type="checkbox" name="muscle" value="back"> Back</label><br>
+        <label><input type="checkbox" name="muscle" value="legs"> Legs</label><br>
+        <label><input type="checkbox" name="muscle" value="arms"> Arms</label><br>
+        <label><input type="checkbox" name="muscle" value="shoulders"> Shoulders</label><br>
+        
+        <h2>Select Intensity</h2>
+        <select name="intensity" id="intensity">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+
+        <br><br>
+        <h2>Select Workout Focus</h2>
+        <select name="focus" id="focus">
+            <option value="Strength">Strength</option>
+            <option value="Hypertrophy">Hypertrophy</option>
+            <option value="Both">Both</option>
+        </select>
+        <br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <h3>Results:</h3>
+    <textarea id="result" readonly></textarea>
+
+    <div class="bottom-banner">
+        <a href="/">Back to Main Page</a>
+    </div>
+
+    <script>
+        document.getElementById("workoutForm").addEventListener("submit", function(event) {
+            event.preventDefault(); 
+
+            let formData = new FormData(this);
+            fetch("/submitWS", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())  
+            .then(data => {
+                document.getElementById("result").value = data;
+            })
+            .catch(error => {
+                document.getElementById("result").value = "Error: " + error;
+                console.error("Error:", error);
+            });
+
+            document.getElementById("result").value = "Loading...";
+        });
+    </script>
+</body>
+</html>
