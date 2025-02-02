@@ -43,7 +43,7 @@ $ python -m flask --app run main (runs the code)
 
 ## 🎯 Usage
 1. Run the Flask backend.
-2. Navigate to `http://localhost:5000` in your browser.
+2. Navigate to `http://127.0.0.1:5000` in your browser.
 3. Choose muscle groups and intensity to generate a workout plan.
 4. Use FormWatcher to analyze squat form in real-time.
 5. View feedback and improve your form.
