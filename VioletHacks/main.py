@@ -5,15 +5,12 @@ import tensorflow as tf
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
-from squat import SquatFormChecker, get_knee_angle, get_hip_angle, get_torso_angle
+from squat import SquatFormChecker, get_knee_angle, get_hip_angle
 import secrets
-
 
 
 interperter = tf.lite.Interpreter(model_path="3.tflite") #downloaded model
 interperter.allocate_tensors() 
-
-
 
 def form_detection():
     # access webcam and make detections
@@ -23,6 +20,7 @@ def form_detection():
         return
 
     window_name = 'Press \'q\' to quit'
+
     cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
     cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
@@ -54,25 +52,23 @@ def form_detection():
         # interpert output details
         keypoints_with_scores = interperter.get_tensor(out_details[0]['index'])
 
-        print(f"Keypoints with scores: {keypoints_with_scores}")
 
 
         # Extract relevant keypoints
-        left_hip = keypoints_with_scores[0][0][:2]
-        left_knee = keypoints_with_scores[0][0][:2]
-        left_ankle = keypoints_with_scores[0][0][:2]
-        left_shoulder = keypoints_with_scores[0][0][:2]
+        left_hip = keypoints_with_scores[0][0][11]
+        left_knee = keypoints_with_scores[0][0][13]
+        left_ankle = keypoints_with_scores[0][0][15]
+        left_shoulder = keypoints_with_scores[0][0][5]
 
         # Calculate angles
         knee_angle = get_knee_angle(left_hip, left_knee, left_ankle)
         hip_angle = get_hip_angle(left_shoulder, left_hip, left_knee)
-        torso_angle = get_torso_angle(left_shoulder, left_hip, left_knee)
 
         # Check the squat form
-        form_score, state = squat_checker.check_squat(knee_angle, hip_angle, torso_angle)
+        form_score, state = squat_checker.check_squat(knee_angle, hip_angle)
 
         if form_score is not None:
-            print(f"Form Score: {form_score}, State: {state}")
+            print(f"Form Score: {form_score}, State: {state}, Knee Angle {knee_angle}, Hip angle {hip_angle}")
 
         # Rendering
         draw_connections(flipped_frame, keypoints_with_scores, EDGES, 0.4)
