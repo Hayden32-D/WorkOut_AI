@@ -56,19 +56,19 @@ The AI utilizes a **TensorFlow Lite** model to analyze squat form. Key angles (h
 - Integration with additional exercises for form tracking
 - Advanced workout customization based on past performance
 - Mobile app compatibility
+- Add more lifts to the camera vision
 
 ## 🤝 Contributors
 - **Hayden Douglas** - Lead Developer
-- **[Your teammates, if any]**
+- **Keller Bice** - Lead Developer
+- **Rohan Solanki** - Lead Developer
 
 ## 📜 License
 This project is licensed under the [MIT License](LICENSE). Feel free to use and modify it!
 
 ## 📞 Contact
 For any inquiries, feel free to reach out:
-- 📧 Email: [your-email@example.com]
-- 🐦 Twitter: [@your_handle]
-- 🌐 LinkedIn: [Your LinkedIn]
+- 📧 Email: [Haydendouglas32@icloud.com]
 
 ---
 
