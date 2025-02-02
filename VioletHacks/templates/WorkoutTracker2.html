@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Form Adviser</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #e4bbab;
+            padding-bottom: 60px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .bottom-banner {
+            width: 100%;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 18px;
+            font-weight: bold;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
+
+        .bottom-banner a {
+            color: white;
+            text-decoration: none;
+        }
+
+        #recordButton {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #db8d6c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #recordButton:hover {
+            background-color: #b3755b;
+        }
+
+        #formScore {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Workout Form Adviser</h1>
+
+    <button id="recordButton">Start Recording</button>
+
+    <!-- Display the form score if available -->
+    <div class="score-container">
+        <!-- Display the score if available -->
+        {% if score %}
+            Your Form Score: {{ score }}
+        {% else %}
+            No score available. Please try again!
+        {% endif %}
+    </div>
+
+    <div class="bottom-banner">
+        <a href="/"> Back to Main Page</a>
+    </div>
+
+    <script>
+        const recordButton = document.getElementById('recordButton');
+    
+        recordButton.addEventListener('click', () => {
+            // When clicked, the script runs and redirects to WorkoutTracker2.html
+            fetch("/callScript", {
+                method: 'POST'
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;  // Redirect to WorkoutTracker2.html
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+    
+</body>
+
+</html>
