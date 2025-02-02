@@ -1,10 +1,14 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from google import genai
 import subprocess
 import tensorflow as tf
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
+from squat import SquatFormChecker, get_knee_angle, get_hip_angle, get_torso_angle
+import secrets
+
+
 
 interperter = tf.lite.Interpreter(model_path="3.tflite") #downloaded model
 interperter.allocate_tensors() 
@@ -14,6 +18,17 @@ interperter.allocate_tensors()
 def form_detection():
     # access webcam and make detections
     cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        print("Error: Could not open video capture.")
+        return
+
+    window_name = 'Press \'q\' to quit'
+    cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
+    cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+
+    squat_checker = SquatFormChecker()  # Create an instance of SquatFormChecker
+    form_score = 0  # Initialize form score
+
 
     while cap.isOpened():
         ret, frame = cap.read() #reads frame from webcam
@@ -38,19 +53,40 @@ def form_detection():
         interperter.invoke()
         # interpert output details
         keypoints_with_scores = interperter.get_tensor(out_details[0]['index'])
-        #print(keypoints_with_scores)
+
+        print(f"Keypoints with scores: {keypoints_with_scores}")
+
+
+        # Extract relevant keypoints
+        left_hip = keypoints_with_scores[0][0][:2]
+        left_knee = keypoints_with_scores[0][0][:2]
+        left_ankle = keypoints_with_scores[0][0][:2]
+        left_shoulder = keypoints_with_scores[0][0][:2]
+
+        # Calculate angles
+        knee_angle = get_knee_angle(left_hip, left_knee, left_ankle)
+        hip_angle = get_hip_angle(left_shoulder, left_hip, left_knee)
+        torso_angle = get_torso_angle(left_shoulder, left_hip, left_knee)
+
+        # Check the squat form
+        form_score, state = squat_checker.check_squat(knee_angle, hip_angle, torso_angle)
+
+        if form_score is not None:
+            print(f"Form Score: {form_score}, State: {state}")
 
         # Rendering
         draw_connections(flipped_frame, keypoints_with_scores, EDGES, 0.4)
         draw_keypoints(flipped_frame, keypoints_with_scores, 0.4)
 
-        cv2.imshow('Press \'q\' to quit', flipped_frame) # rending frame
+        cv2.imshow(window_name, flipped_frame) # rending frame
 
         if (cv2.waitKey(10) & 0xFF) == ord('q'):
             break
 
     cap.release()
     cv2.destroyAllWindows() #close frame
+    print(f"Form Score Calculated: {form_score}")  # Debugging output
+    return form_score
 
 
 def draw_keypoints(frame, keypoints, confidence_threshold):
@@ -126,6 +162,7 @@ start("5000")
 
 
 app = Flask(__name__)
+app.secret_key = 'your_super_secret_key'
 
 @app.route('/WorkoutSuggestor',methods=['GET', 'POST'])
 def WorkoutSuggestor():
@@ -154,30 +191,30 @@ def submit():
 
 @app.route('/FormWatcher')
 def FormWatcher():
-    return render_template("WorkoutTracker.html")
+    return render_template("WorkoutTracker2.html")
 
 
-@app.route('/callScript', methods=['POST', 'GET'])
+@app.route('/callScript', methods=['POST'])
 def callScript():
-    #exec(open('model.py').read())
-    form_detection()
+    form_score = form_detection()
+
+    if form_score is None:
+        form_score = "No score detected. Please try again."
+
+    # Store score in session
+    session['form_score'] = form_score
+
+    # Redirect to display the score
+    return redirect(url_for('display_score'))
+
+@app.route('/display_score')
+def display_score():
+    form_score = session.get('form_score', None)
     
+    if form_score is None:
+        form_score = "No score available. Please try again."
 
-    """
-    cap = c.VideoCapture(0)
-    while cap.isOpened():
-        _, frame = cap.read()
-        flipped_frame = c.flip(frame,1)
-
-        c.imshow("test", flipped_frame) 
-        if (c.waitKey(10) & 0xFF) == ord('q'):
-            break
-    cap.release()
-    c.destroyAllWindows()
-    """
-
-    return render_template("WorkoutTracker.html")
-
+    return render_template("WorkoutTracker2.html", score=form_score)
 @app.route("/")
 def main():
     return render_template("mainPage.html")
