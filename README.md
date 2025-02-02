@@ -1,7 +1,5 @@
 # VioletHacks - WorkOut AI
 
-![Project Logo](https://your-logo-url.com) *(Optional: Replace with an actual logo or banner)*
-
 ## 📌 Overview
 VioletHacks - WorkOut AI is an AI-powered fitness assistant designed to generate personalized workout routines and provide real-time form analysis using computer vision. This project was developed during the VioletHacks hackathon and aims to offer an intelligent and adaptive approach to fitness.
 
@@ -62,9 +60,6 @@ The AI utilizes a **TensorFlow Lite** model to analyze squat form. Key angles (h
 - **Hayden Douglas** - Lead Developer
 - **Keller Bice** - Lead Developer
 - **Rohan Solanki** - Lead Developer
-
-## 📜 License
-This project is licensed under the [MIT License](LICENSE). Feel free to use and modify it!
 
 ## 📞 Contact
 For any inquiries, feel free to reach out:
