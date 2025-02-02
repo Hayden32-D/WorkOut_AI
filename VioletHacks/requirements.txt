@@ -1,0 +1,7 @@
+Flask
+opencv-python
+tensorflow
+tensorflow-lite
+numpy
+matplotlib
+google-generativeai
