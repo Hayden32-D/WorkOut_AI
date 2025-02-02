@@ -11,6 +11,7 @@ import secrets
 
 interperter = tf.lite.Interpreter(model_path="3.tflite") #downloaded model
 interperter.allocate_tensors() 
+squatWorkout = False
 
 def form_detection():
     # access webcam and make detections
@@ -192,13 +193,20 @@ def FormWatcher():
 
 @app.route('/callScript', methods=['POST'])
 def callScript():
-    form_score = form_detection()
+    workout = request.get_json().get('workout')
+    if (workout == "squat"):
+        squatWorkout = True
+    else:
+        squatWorkout = False
 
-    if form_score is None:
-        form_score = "No score detected. Please try again."
+    print(squatWorkout)
+    #form_score = form_detection()
+
+    #if form_score is None:
+   #     form_score = "No score detected. Please try again."
 
     # Store score in session
-    session['form_score'] = form_score
+    #session['form_score'] = form_score
 
     # Redirect to display the score
     return redirect(url_for('display_score'))
@@ -211,6 +219,8 @@ def display_score():
         form_score = "No score available. Please try again."
 
     return render_template("WorkoutTracker2.html", score=form_score)
+
+
 @app.route("/")
 def main():
     return render_template("mainPage.html")
