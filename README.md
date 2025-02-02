@@ -3,21 +3,21 @@
 ![Project Logo](https://your-logo-url.com) *(Optional: Replace with an actual logo or banner)*
 
 ## 📌 Overview
-VioletHacks - WorkOut AI is an AI-powered fitness assistant designed to generate personalized workout routines based on user input. This project was developed during the VioletHacks hackathon and aims to provide an intelligent and adaptive approach to fitness.
+VioletHacks - WorkOut AI is an AI-powered fitness assistant designed to generate personalized workout routines and provide real-time form analysis using computer vision. This project was developed during the VioletHacks hackathon and aims to offer an intelligent and adaptive approach to fitness.
 
 ## 🚀 Features
-- 🔹 AI-generated workout plans
-- 🔹 Customizable fitness goals
-- 🔹 User-friendly interface
-- 🔹 Real-time exercise recommendations
-- 🔹 Data logging and progress tracking *(optional: if applicable)*
+- 🔹 AI-generated workout plans based on user input
+- 🔹 Real-time squat form analysis using a TensorFlow Lite model
+- 🔹 User-friendly interface for selecting muscle groups and workout intensity
+- 🔹 Automated process management to free up necessary ports
+- 🔹 Flask-based web application
 
 ## 🛠️ Tech Stack
-- **Backend:** Python, Flask *(or FastAPI, Django, etc., if applicable)*
-- **AI/ML:** TensorFlow/PyTorch/OpenAI API *(mention the relevant ML frameworks used)*
-- **Frontend:** React.js *(or any other frontend tech used)*
-- **Database:** Firebase/PostgreSQL/MongoDB *(mention the actual DB used)*
-- **Deployment:** Docker/AWS/Heroku *(if applicable)*
+- **Backend:** Python, Flask
+- **AI/ML:** TensorFlow Lite, OpenAI API (Gemini)
+- **Computer Vision:** OpenCV
+- **Frontend:** HTML, CSS, JavaScript
+- **Deployment:** Local machine, Flask server
 
 ## 📥 Installation & Setup
 
@@ -25,7 +25,9 @@ VioletHacks - WorkOut AI is an AI-powered fitness assistant designed to generate
 Ensure you have the following installed:
 - Python 3.8+
 - pip
-- Node.js (if frontend is involved)
+- Flask
+- OpenCV
+- TensorFlow Lite
 - Git
 
 ### Clone the Repository
@@ -37,29 +39,23 @@ $ cd WorkOut_AI/VioletHacks
 ### Backend Setup
 ```bash
 $ pip install -r requirements.txt
-$ python app.py  # or flask run
-```
-
-### Frontend Setup (if applicable)
-```bash
-$ cd frontend
-$ npm install
-$ npm start
+$ python main.py  # or flask run
 ```
 
 ## 🎯 Usage
-1. Run the backend server.
-2. Open the frontend and enter your workout preferences.
-3. Get AI-generated workout routines tailored to your needs.
-4. Track your progress over time.
+1. Run the Flask backend.
+2. Navigate to `http://localhost:5000` in your browser.
+3. Choose muscle groups and intensity to generate a workout plan.
+4. Use FormWatcher to analyze squat form in real-time.
+5. View feedback and improve your form.
 
 ## 🔬 AI Model
-The AI utilizes **[model_name]** trained on **[dataset]** to recommend workouts based on user input such as fitness level, goals, and available equipment.
+The AI utilizes a **TensorFlow Lite** model to analyze squat form. Key angles (hip, knee) are extracted from webcam input, and a score is assigned based on proper form adherence.
 
 ## 📌 Future Improvements
-- Integration with wearable devices
-- Enhanced exercise form correction using computer vision
-- More personalized nutrition recommendations
+- Integration with additional exercises for form tracking
+- Advanced workout customization based on past performance
+- Mobile app compatibility
 
 ## 🤝 Contributors
 - **Hayden Douglas** - Lead Developer
@@ -77,4 +73,3 @@ For any inquiries, feel free to reach out:
 ---
 
 💡 *Contributions are welcome! Feel free to fork the repo and submit a PR.*
-
