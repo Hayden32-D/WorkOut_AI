@@ -1,5 +1,8 @@
 # VioletHacks - WorkOut AI
 
+##DEMO
+https://youtu.be/BfKDAjrkt7o?feature=shared
+
 ## 📌 Overview
 VioletHacks - WorkOut AI is an AI-powered fitness assistant designed to generate personalized workout routines and provide real-time form analysis using computer vision. This project was developed during the VioletHacks hackathon and aims to offer an intelligent and adaptive approach to fitness.
 
